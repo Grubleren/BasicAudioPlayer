@@ -1,5 +1,6 @@
 ﻿using Foundation;
 using System;
+using System.Threading;
 using UIKit;
 
 namespace BasicPlayer
@@ -10,10 +11,15 @@ namespace BasicPlayer
         {
         }
 
-        public override void ViewDidLoad ()
+        public override void ViewDidLoad()
         {
-            base.ViewDidLoad ();
+            base.ViewDidLoad();
+            Thread thread = new Thread(new ThreadStart(Go));
+            thread.Start();
+        }
 
+        void Go()
+        { 
             Player player = new Player();
 
             int samplingFrequency = 48000;
@@ -25,9 +31,9 @@ namespace BasicPlayer
 
             while (true)
             {
+                data = new byte[2 * N];
                 for ( int i = 0; i< N;i++)
                 {
-                    data = new byte[2 * N];
                     short sine = (short)(10000 * Math.Sin(phi));
                     data[2 * i] = (byte)(sine & 0xff);
                     data[2 * i + 1] = (byte)((sine >> 8) & 0xff);
