@@ -18,6 +18,7 @@ namespace BasicPlayer
         int timescale;
         CMTime startTime;
         int totalFrameLength;
+        int nChannels;
         CMAudioFormatDescription formatDescriptiom;
         AVSampleBufferRenderSynchronizer synchronizer;
         AVSampleBufferAudioRenderer audioRenderer;
@@ -31,6 +32,7 @@ namespace BasicPlayer
 
         public bool Init(int samplingFrequency, int nChannels)
         {
+            this.nChannels = nChannels;
             timescale = samplingFrequency; ;
             audioRenderer.Muted = false;
             audioRenderer.Volume = 1;
@@ -60,7 +62,7 @@ namespace BasicPlayer
                 {
 
                 int blockLength = data.Length;
-                int frameLength = blockLength / 4;
+                int frameLength = blockLength / (2 * nChannels);
                     CMCustomBlockAllocator cba = new CMCustomBlockAllocator();
 
                     CMBlockBuffer blockListBuffer = CMBlockBuffer.CreateEmpty(0, 0, out blockBufferError0);
